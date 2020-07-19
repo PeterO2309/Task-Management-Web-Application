@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>View Taskboards</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <!-- Navigation links -->
+        <div><nav class="navbar navbar-expand-sm bg-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/create_taskboard">ADD A TASKBOARD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/view_taskboard">VIEW TASKBOARDS</a>
+                </li>
+
+                <li class="">
+                    <a class="nav-link navbar-nav justify-content-end" href="{{ url }}">{{ url_string }}</a>
+                </li>
+            </ul>
+            </nav>
+        </div>
+
+        <div>
+
+            {% if user %}
+            <h6>Welcome {{ user.email() }}. TBs created by current user are colored orange.</h6>
+
+            <h4>Taskboard List </h4>
+
+
+            {% for i in myuser.tb_key %}
+
+            {% if myuser.email_address in i.get().tbd_users_email or myuser.email_address == i.get().tbd_creator_email %}
+
+            <ul>
+                {% if myuser.email_address == i.get().tbd_creator_email %}
+                <!--<button type="button"><a href="/view_each_tb?tbd_name={{i.tbd_name}}">{{ i.tbd_name }}</a></button> -->
+                <button type="button" class="btn btn-warning"><a href="/view_each_tb?ID={{i.get().key.id()}}">{{ i.get().tbd_name}}</a></button> ==> <button type="button"><a href="/edit_taskboard?ID={{i.get().key.id()}}">Edit/Delete/Remove User</a></button>
+                {% else %}
+                <button type="button"><a href="/view_each_tb?ID={{i.get().key.id()}}">{{ i.get().tbd_name}}</a></button> ==> <button type="button"><a href="/edit_taskboard?ID={{i.get().key.id()}}">Edit/Delete/Remove User</a></button>
+                {% endif %}
+            </ul>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+
+
+
+        {% else %}
+        <p>Hello guest, Welcome to the application.</p>
+
+        {% endif %}
+
+    </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Create a TaskBoard</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+    </head>
+    <!-- Navigation links -->
+   <div><nav class="navbar navbar-expand-sm bg-light">
+       <ul class="navbar-nav">
+           <li class="nav-item">
+               <a class="nav-link" href="/">HOME</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" href="/create_taskboard">ADD A TASKBOARD</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" href="/view_taskboard">VIEW TASKBOARDS</a>
+           </li>
+
+           <li class="">
+               <a class="nav-link navbar-nav justify-content-end" href="{{ url }}">{{ url_string }}</a>
+           </li>
+       </ul>
+       </nav>
+   </div>
+
+   <div>
+    <form method="post" action="/create_taskboard">
+        <p>ADD NEW TASKBOARD</p>
+         <label for="tbd_name">Name of Taskboard: </label>
+         <input type="text" name="tbd_name" value="" required><br>
+          <input type="submit" value="Submit" name="button"  class="btn btn-primary"/>
+    </form>
+    <br>
+
+    <form method="post" action="/create_taskboard">
+          <input type="submit" value="Cancel" name="button" class="btn btn-primary">
+    </form>
+  </div>
+
+  </body>
+</html>

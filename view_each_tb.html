@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>View each Taskboard</title>
+
+
+        <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+        <style>
+
+            body{
+                font-family: 'Raleway', sans-serif;
+            }
+
+            .tb_dsn{
+/*
+                background: black;
+                color: white;
+*/
+                font-size: 20px;
+
+            }
+
+            .link{
+                color: black;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div>
+
+            <!-- Navigation links -->
+            <div><nav class="navbar navbar-expand-sm bg-light">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/view_taskboard">VIEW TASKBOARDS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#invite_users">INVITE USERS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#counters">TASK COUNTERS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tasks_table">TASKS DETAILS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#create_task">CREATE TASK</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#delete_task">DELETE/EDIT TASK</a>
+                    </li>
+
+
+                    <li class="">
+                        <a class="nav-link navbar-nav justify-content-end" href="{{ url }}">{{ url_string }}</a>
+                    </li>
+                </ul>
+                </nav>
+            </div>
+
+            <div class="container">
+
+
+                <div class="row">
+
+
+
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 py-3">
+
+                <div class="row">
+
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                <h3 class="font-weight-bold text-center">Welcome {{ user }}</h3>
+                     <hr class="pb-1">
+                    <p class="text-center font-weight-bold">Task Board Name </p>
+                    <p class=" text-center tb_dsn ">{{ tb_clicked.tbd_name }}</p>
+                    <p class="text-center font-weight-bold">Taskboard Creator</p>
+                    <p class=" text-center tb_dsn">{{ tb_clicked.tbd_creator_email }}</p>
+                <p class="text-center font-weight-bold">TaskBoard users </p>
+
+                    <table class="table table-borderless">
+
+                        <tbody class="text-center">
+                            {% for n in tb_clicked.tbd_users_email%}
+
+                            <tr>
+
+                                <td> {{ n }}</td>
+
+
+                            </tr>
+
+                         {% endfor %}
+                        </tbody>
+
+
+                    </table>
+<!--
+                <ul>
+                    {% for n in tb_clicked.tbd_users_email%}
+                    <li>{{ n }}</li>
+                    {% endfor %}
+                </ul>
+-->
+                    </div>
+
+
+                 <div class="col-sm-3 col-md-3 col-lg-3">
+                </div>
+                    </div>
+            </div>
+
+
+
+
+
+
+            {% if myuser.email_address == tb_clicked.tbd_creator_email %}
+            <div  class="col-sm-12 col-md-12 col-lg-12 py-3">
+                <hr >
+                <h3 id="invite_users" class=" text-center font-weight-bolder">Invite Users</h3>
+                <hr>
+                <form action="/view_each_tb" method="post">
+                   <p class="text-center"> <label class="heading">Select a user to invite to the taskboard:</label></p>
+                    <p class="text-center">
+                    <select required name="invite">
+                        <option value="" selected disabled hidden>--Please choose a user--</option>
+                        {% for n in all_users %}
+                        <option value="{{ n.key.id() }}">{{ n.email_address }}</option>
+                        {% endfor %}
+                    </select>
+                        </p>
+                   <p class="text-center">
+                    <input type="hidden" name="f_id" value="{{ tb_clicked.key.id()}}"/>
+                    <input type="submit" name="button" value="Invite users" class="text-center"/>
+                        </p>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="col-sm-12 col-md-12 col-lg-12 py-3 text-center">
+                <hr >
+                <h3 id="counters" class="font-weight-bold">Tasks counters</h3>
+                <hr>
+                <p class="font-weight-bold">Active tasks</p>
+                    <p>{{activetasks}} </p>
+                <p class="font-weight-bold">Completed tasks</p>
+                    <p>{{completedcount}}</p>
+                <p class="font-weight-bold">Total tasks</p>
+                    <p>{{ totaltask }} </p>
+                <p class="font-weight-bold">Total tasks completed today</p>
+                    <p>{{ completedtoday }} </p>
+
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-12 py-3">
+                <hr >
+                <h3 id="tasks_table" class="text-center font-weight-bold">Table of Tasks</h3> <hr>
+                <table style="width:100%">
+                    <tr>
+                        <th>Title</th>
+                        <th>Assigned User</th>
+                        <th>Creator</th>
+                        <th>Due date</th>
+                        <th>Status</th>
+                        <th>completion date</th>
+                        <th>completion time</th>
+
+                    </tr>
+                    {% for i in tb_clicked.tk_key %}
+
+                    {% if i.get().assigned_user == "" %}
+                    <tr class="text-danger">
+                        <td>{{ i.get().title}}</td>
+                        <td>{{ i.get().assigned_user}}</td>
+                        <td>{{ i.get().creator}}</td>
+                        <td>{{ i.get().due_date}}</td>
+                        <td>{{i.get().word_status}}</td>
+                        <td>{{i.get().date_task_completed}}</td>
+                        <td>{{i.get().time_task_completed}}</td>
+                    </tr>
+
+                    {% else %}
+                    <tr>
+                        <td>{{ i.get().title}}</td>
+                        <td>{{ i.get().assigned_user}}</td>
+                        <td>{{ i.get().creator}}</td>
+                        <td>{{ i.get().due_date}}</td>
+                        <td>{{i.get().word_status}}</td>
+                        <td>{{i.get().date_task_completed}}</td>
+                        <td>{{i.get().time_task_completed}}</td>
+                    </tr>
+
+                    {% endif %}
+
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-12 py-3">
+                <hr >
+                <h3 id="create_task" class="text-center font-weight-bold pb-2">Create a task</h3>
+                <hr >
+                <form action="/view_each_tb" method="post">
+                    <div class="form-group text-center">
+                        <label for="title" class="text-center">Title</label>
+                        <input type="text" name="title" id="title" required class="form-control w-50 mx-auto"/>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <label for="assigned_user" class="">Assigned user</label>
+                        <select name="assigned_user" id="assigned_user" required class="form-control w-50 mx-auto" >
+                            <option value="" selected disabled hidden>--Please choose a user--</option>
+                            {% for n in users_list %}
+                            <option value="{{n}}">{{ n }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <label for="due_date" class="">Due Date</label>
+                        <input type="date" name="due_date" id="due_date" class="form-control w-50 mx-auto" required />
+                    </div>
+
+                    <p class="text-center">
+                    <input type="hidden" name="f_id" value="{{ tb_clicked.key.id()}}"/>
+                    <input type="submit" name="button" value="Add a task" class="btn btn-primary mx-auto"/></p>
+                </form>
+            </div>
+
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 py-3">
+                        <hr >
+                        <h3 class="text-center font-weight-bolder"> Delete/Edit  </h3>
+                        <hr >
+            {% for i in tb_clicked.tk_key %}
+<!--            <div>-->
+               <h4 id="delete_task" class="text-center font-weight-bold ">Delete/Edit Task: {{ i.get().title}}</h4>
+                <form method="post" action="/view_each_tb">
+                    <fieldset class="text-center">
+                        <p>Title {{ i.get().title}}</p>
+                        <p>Assigned User: {{ i.get().assigned_user}}</p>
+                        <p>Creator: {{ i.get().creator}}</p>
+                        <p>Due date: {{ i.get().due_date}} </p>
+                        <p>Completed: {{ i.get().status}}</p>
+
+                        <p>Task completion date: {{ i.get().date_task_completed}}</p>
+                        <p>Task completion time: {{ i.get().time_task_completed}}</p>
+
+
+
+
+                        <input type="hidden" name="index" value="{{ loop.index }}" />
+                        <input type="hidden" name="ind" value="{{ i }}" />
+                        <input type="hidden" name="t_id" value="{{ i.get().key.id()}}"/>
+                        <input type="hidden" name="f_id" value="{{ tb_clicked.key.id()}}"/>
+                        <p>The "completed/not completed" button shows the current status of the task. To change status, click
+                        the button.  </p>
+
+                        <p><a class="btn btn-primary py-2" href="/view_task?tb_ID={{ tb_clicked.key.id()}}&t_ID={{ i.get().key.id()}}&index={{loop.index }}">EDIT TASK</a> <p>
+
+                        <input type="submit" name="button" value="{{i.get().word_status}}" class="btn btn-primary py-2"/>
+                        <input type="submit" name="button" value="Delete" class="btn btn-primary py-2"/>
+                        <!--<input type="submit" name="button" value="Edit"/>-->
+                    </fieldset>
+                </form>
+<!--            </div>-->
+            {% endfor %}
+                        </div>
+
+        </div>
+                </div>
+             </div>
+    </body>
+</html>
